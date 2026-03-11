@@ -9,6 +9,7 @@ import 'package:sunu_task/screens/home/tabs/dashboard_tab.dart';
 import 'package:sunu_task/screens/home/tabs/profile_tab.dart';
 import 'package:sunu_task/screens/home/tabs/projects_tab.dart';
 import 'package:sunu_task/screens/home/tabs/tasks_tab.dart';
+import 'package:sunu_task/screens/projects/project_form_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final AuthProvider authProvider;
@@ -53,12 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text(AppStrings.appName),
       ),
 
-      // Drawer
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            // En-tête avec avatar
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(color: AppColors.primary),
               accountName: Text(user?.name ?? ''),
@@ -77,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
             ListTile(
               leading: const Icon(Icons.dashboard),
               title: const Text('Dashboard'),
@@ -110,10 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
               },
             ),
-
             const Divider(),
-
-            // Déconnexion
             ListTile(
               leading: const Icon(Icons.logout, color: AppColors.error),
               title: const Text(
@@ -126,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // IndexedStack pour préserver l'état des onglets
       body: IndexedStack(
         index: _currentIndex,
         children: [
@@ -144,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      // BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -171,12 +164,19 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      // FAB visible sur Dashboard et Projets
       floatingActionButton: Visibility(
         visible: _currentIndex == 0 || _currentIndex == 1,
         child: FloatingActionButton(
           backgroundColor: AppColors.primary,
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ProjectFormScreen(
+                authProvider: widget.authProvider,
+                projectProvider: widget.projectProvider,
+              ),
+            ),
+          ),
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
